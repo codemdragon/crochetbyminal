@@ -1,0 +1,73 @@
+{
+  "siteMetadata": {
+    "title": "Crochet by Minal",
+    "description": "Custom handmade crochet creations, flowers, and accessories. Delivering nationwide in Pakistan.",
+    "keywords": "Crochet, Handmade, Pakistan, Minal, Flowers, Custom Gifts, Yarn",
+    "deliveryText": "Delivery Nationwide",
+    "deliveryFlag": "🇵🇰"
+  },
+  "hero": {
+    "badge": "Handmade with Love",
+    "title": "Custom Crochet Creations",
+    "subtitle": "Adding a touch of warmth and coziness to your life with bespoke floral designs, intricate accessories, and handmade treasures.",
+    "ctaGallery": "View Gallery",
+    "ctaOrder": "Order Custom"
+  },
+  "about": {
+    "title": "A Little About Minal",
+    "image": "https://images.unsplash.com/photo-1606166295521-4d99c4380eb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "content": [
+      "Welcome to my creative corner! I specialize in turning yarn into flowers that never fade and accessories that hug you with warmth. Every stitch is made with patience and passion.",
+      "Whether you need a bouquet for a loved one or a cute coaster set for your desk, everything is 100% handmade and customizable to your color palette."
+    ]
+  },
+  "gallery": [
+    {
+      "id": 1,
+      "image": "https://images.unsplash.com/photo-1619240406859-994119d501b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "badge": "Floral Bouquet",
+      "category": "flowers"
+    },
+    {
+      "id": 2,
+      "image": "https://images.unsplash.com/photo-1629202868864-79357d605175?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "badge": "Amigurumi",
+      "category": "plushies"
+    },
+    {
+      "id": 3,
+      "image": "https://images.unsplash.com/photo-1584144360662-5264b3017a7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "badge": "Accessories",
+      "category": "accessories"
+    },
+    {
+      "id": 4,
+      "image": "https://images.unsplash.com/photo-1519069503463-b8a927d26442?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "badge": "Sunflowers",
+      "category": "flowers"
+    },
+    {
+      "id": 5,
+      "image": "https://images.unsplash.com/photo-1615486511484-92e172cc416d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "badge": "Coasters",
+      "category": "decor"
+    },
+    {
+      "id": 6,
+      "image": "https://images.unsplash.com/photo-1606836569134-297eb040c598?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      "badge": "Tulip Bouquets",
+      "category": "flowers"
+    }
+  ],
+  "customOrder": {
+    "title": "Request a Custom Order",
+    "description": "Have a specific design in mind? Describe it below! When you click \"Send Request\", I'll copy your message and open my Instagram so you can DM me directly.",
+    "placeholder": "Hi Minal! I would like to order a bouquet of 3 lavender tulips and 2 white daisies...",
+    "buttonText": "Send to Instagram"
+  },
+  "contact": {
+    "instagram": "_crochetbyminal",
+    "instagramUrl": "https://instagram.com/_crochetbyminal",
+    "footerText": "© 2026 Crochet by Minal. Made with love and yarn."
+  }
+}

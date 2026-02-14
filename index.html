@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Crochet by Minal - Custom handmade crochet creations, flowers, and accessories. Delivering nationwide in Pakistan.">
+    <meta name="keywords" content="Crochet, Handmade, Pakistan, Minal, Flowers, Custom Gifts, Yarn">
+    <title>Crochet by Minal | Custom Handmade Creations</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config for Colors/Fonts -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFFBF0',
+                        sage: {
+                            100: '#E6F0E6',
+                            300: '#B8D8B8',
+                            500: '#8FBC8F', // Dark Sea Green
+                            700: '#5F855F',
+                            800: '#2F4F2F',
+                        },
+                        rose: {
+                            50: '#FFF5F7',
+                            100: '#FFF0F5',
+                            300: '#FFD1DC',
+                            500: '#D8BFD8', // Thistle/Dusty Pink
+                        },
+                        earth: '#8B4513'
+                    },
+                    fontFamily: {
+                        hand: ['Pacifico', 'cursive'],
+                        body: ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Animations */
+        body {
+            background-color: #FFFBF0;
+            color: #4A4A4A;
+        }
+
+        .flower-pattern {
+            background-image: radial-gradient(#D8BFD8 2px, transparent 2px), radial-gradient(#8FBC8F 2px, transparent 2px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            opacity: 0.3;
+        }
+
+        .img-hover-zoom {
+            transition: transform 0.5s ease;
+        }
+
+        .img-container:hover .img-hover-zoom {
+            transform: scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes pulse-slow {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+
+        @keyframes bounce-slow {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .animate-bounce-slow {
+            animation: bounce-slow 3s infinite ease-in-out;
+        }
+
+        /* Sidebar transition is handled by Tailwind classes */
+    </style>
+</head>
+
+<body class="font-body antialiased relative overflow-x-hidden">
+
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 flower-pattern pointer-events-none z-0"></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-cream/90 backdrop-blur-md shadow-sm border-b border-sage-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-hand text-sage-700 flex items-center gap-2">
+                <i data-lucide="flower-2" class="text-rose-500"></i>
+                <span id="nav-title">Crochet by Minal</span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 text-sage-700 font-semibold">
+                <a href="#home" class="hover:text-rose-500 transition-colors">Home</a>
+                <a href="#about" class="hover:text-rose-500 transition-colors">About</a>
+                <a href="#gallery" class="hover:text-rose-500 transition-colors">Gallery</a>
+                <a href="#custom" class="hover:text-rose-500 transition-colors">Custom Orders</a>
+                <a href="#contact" class="hover:text-rose-500 transition-colors">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" onclick="toggleMenu()"
+                class="md:hidden text-sage-700 focus:outline-none z-50 relative p-1 rounded-md hover:bg-sage-100 transition-colors">
+                <i data-lucide="menu" class="w-8 h-8 transition-transform duration-300" id="menu-icon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Sidebar Backdrop -->
+    <div id="sidebar-backdrop" onclick="toggleMenu()"
+        class="fixed inset-0 bg-black/50 z-40 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden">
+    </div>
+
+    <!-- Sidebar Menu (Slide from Right) -->
+    <div id="sidebar-menu"
+        class="fixed top-0 right-0 h-full w-72 bg-cream shadow-2xl z-40 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col pt-24 px-8 border-l border-sage-300">
+        <div class="flex flex-col space-y-6 font-semibold text-xl text-sage-700">
+            <a href="#home" onclick="toggleMenu()"
+                class="sidebar-link hover:text-rose-500 border-b border-sage-200 pb-3 flex justify-between items-center group">
+                Home <i data-lucide="chevron-right"
+                    class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+            </a>
+            <a href="#about" onclick="toggleMenu()"
+                class="sidebar-link hover:text-rose-500 border-b border-sage-200 pb-3 flex justify-between items-center group">
+                About <i data-lucide="chevron-right"
+                    class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+            </a>
+            <a href="#gallery" onclick="toggleMenu()"
+                class="sidebar-link hover:text-rose-500 border-b border-sage-200 pb-3 flex justify-between items-center group">
+                Gallery <i data-lucide="chevron-right"
+                    class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+            </a>
+            <a href="#custom" onclick="toggleMenu()"
+                class="sidebar-link hover:text-rose-500 border-b border-sage-200 pb-3 flex justify-between items-center group">
+                Custom Orders <i data-lucide="chevron-right"
+                    class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+            </a>
+            <a href="#contact" onclick="toggleMenu()"
+                class="sidebar-link hover:text-rose-500 border-b border-sage-200 pb-3 flex justify-between items-center group">
+                Contact <i data-lucide="chevron-right"
+                    class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+            </a>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="mt-auto mb-10 text-center text-sm text-sage-500">
+            <p class="mb-2">Follow my journey</p>
+            <div class="flex justify-center gap-4">
+                <a href="#" target="_blank" class="p-2 bg-rose-100 rounded-full text-rose-500 hover:bg-rose-200"><i
+                        data-lucide="instagram" class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative z-10 min-h-[85vh] flex items-center justify-center text-center px-4 pt-10">
+        <div class="max-w-4xl opacity-0 translate-y-4 transition-all duration-1000 delay-100" id="hero-content">
+            <!-- Dynamic Content -->
+            <div class="animate-pulse flex flex-col items-center">
+                <div class="h-8 w-32 bg-sage-200 rounded-full mb-4"></div>
+                <div class="h-16 w-3/4 bg-sage-200 rounded-lg mb-6"></div>
+                <div class="h-4 w-1/2 bg-sage-200 rounded mb-2"></div>
+                <div class="h-4 w-1/3 bg-sage-200 rounded mb-8"></div>
+                <div class="flex gap-4">
+                    <div class="h-12 w-32 bg-sage-300 rounded-full"></div>
+                    <div class="h-12 w-32 bg-sage-200 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="relative z-10 py-24 bg-white/60 backdrop-blur-sm">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center gap-16" id="about-content">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="relative z-10 py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-hand text-sage-700 mb-4 scroll-animate opacity-0 translate-y-8">The
+                Collection</h2>
+            <p class="text-gray-500 mb-16 text-lg scroll-animate opacity-0 translate-y-8">Some of my favorite floral
+                arrangements and pieces.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="gallery-grid">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Orders Section -->
+    <section id="custom" class="relative z-10 py-24 bg-sage-50/80">
+        <div class="container mx-auto px-6 max-w-2xl text-center" id="custom-content">
+            <!-- Dynamic Content -->
+        </div>
+    </section>
+
+    <!-- Footer / Contact -->
+    <footer id="contact" class="relative z-10 bg-sage-800 text-cream py-16">
+        <div class="container mx-auto px-6 text-center" id="footer-content">
+            <!-- Dynamic Content -->
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. Data Fetching & Rendering ---
+        async function loadContent() {
+            try {
+                const response = await fetch('db.json');
+                if (!response.ok) throw new Error('Failed to load data');
+                const data = await response.json();
+                renderSite(data);
+            } catch (error) {
+                console.error('Error loading site content:', error);
+                document.getElementById('hero-content').innerHTML = '<p class="text-red-500">Failed to load content. Please refresh.</p>';
+            }
+        }
+
+        function renderSite(data) {
+            // Meta & Nav
+            document.title = data.siteMetadata.title + " | " + data.hero.title;
+            document.getElementById('nav-title').textContent = data.siteMetadata.title;
+
+            // Hero
+            const heroWrap = document.getElementById('hero-content');
+            heroWrap.innerHTML = `
+                <div class="inline-block p-2 bg-rose-100 rounded-full mb-6 shadow-sm animate-pulse-slow">
+                    <span class="px-4 py-1 text-rose-500 text-sm font-bold tracking-wide uppercase">${data.hero.badge}</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-hand text-sage-800 mb-8 drop-shadow-sm leading-tight">
+                    ${data.hero.title}
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
+                    ${data.hero.subtitle}
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <a href="#gallery" class="w-full sm:w-auto px-8 py-4 bg-sage-500 text-white rounded-full font-semibold shadow-lg hover:bg-sage-700 transition-all transform hover:-translate-y-1 hover:shadow-xl text-lg">
+                        ${data.hero.ctaGallery}
+                    </a>
+                    <a href="#custom" class="w-full sm:w-auto px-8 py-4 bg-white text-sage-700 border-2 border-sage-500 rounded-full font-bold shadow-lg hover:bg-rose-50 transition-all transform hover:-translate-y-1 text-lg">
+                        ${data.hero.ctaOrder}
+                    </a>
+                </div>
+            `;
+            // Trigger Hero Animation
+            setTimeout(() => {
+                heroWrap.classList.remove('opacity-0', 'translate-y-4');
+            }, 100);
+
+            // About
+            const aboutWrap = document.getElementById('about-content');
+            const aboutParagraphs = data.about.content.map(p => `<p class="text-gray-700 leading-relaxed mb-6 text-lg">${p}</p>`).join('');
+            aboutWrap.innerHTML = `
+                <div class="md:w-1/2 scroll-animate opacity-0 translate-y-8 transition-all duration-700">
+                    <div class="relative group">
+                        <div class="absolute -inset-4 bg-rose-100 rounded-2xl transform rotate-2 group-hover:rotate-1 transition-transform duration-500"></div>
+                        <img src="${data.about.image}" 
+                             alt="About Minal" 
+                             class="relative rounded-2xl shadow-xl w-full h-[400px] object-cover transform -rotate-2 border-4 border-white group-hover:rotate-0 transition-transform duration-500">
+                    </div>
+                </div>
+                <div class="md:w-1/2 scroll-animate opacity-0 translate-y-8 transition-all duration-700 delay-200">
+                    <h2 class="text-4xl md:text-5xl font-hand text-sage-700 mb-8 relative inline-block">
+                        ${data.about.title}
+                        <span class="absolute bottom-0 left-0 w-full h-3 bg-rose-200/50 -z-10 transform -rotate-1"></span>
+                    </h2>
+                    ${aboutParagraphs}
+                </div>
+            `;
+
+            // Gallery
+            const galleryGrid = document.getElementById('gallery-grid');
+            galleryGrid.innerHTML = data.gallery.map((item, index) => `
+                <div class="group bg-white p-4 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 scroll-animate opacity-0 translate-y-8" style="transition-delay: ${index * 100}ms">
+                    <div class="img-container overflow-hidden rounded-2xl h-80 relative">
+                        <img src="${item.image}" alt="${item.badge}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                            <span class="bg-white/95 text-sage-800 px-6 py-3 rounded-full font-bold text-sm shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 border border-sage-100">${item.badge}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Custom Orders
+            const customWrap = document.getElementById('custom-content');
+            customWrap.innerHTML = `
+                <h2 class="text-4xl md:text-5xl font-hand text-sage-700 mb-8 scroll-animate opacity-0 translate-y-8">${data.customOrder.title}</h2>
+                <p class="text-gray-600 mb-12 text-lg scroll-animate opacity-0 translate-y-8 max-w-xl mx-auto">
+                    ${data.customOrder.description}
+                </p>
+
+                <form id="orderForm" class="bg-white p-8 md:p-12 rounded-3xl shadow-xl scroll-animate opacity-0 translate-y-8 relative overflow-hidden border border-sage-100">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-sage-100 rounded-bl-full -mr-20 -mt-20 opacity-50 z-0"></div>
+                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-rose-100 rounded-tr-full -ml-16 -mb-16 opacity-50 z-0"></div>
+                    
+                    <div class="mb-8 text-left relative z-10">
+                        <label for="order-details" class="block text-gray-700 font-bold mb-3 pl-1 text-lg">Tell me what you'd like:</label>
+                        <textarea 
+                            id="order-details" 
+                            rows="5" 
+                            class="w-full p-5 border border-sage-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-sage-100 focus:border-sage-400 bg-cream/30 resize-y transition-shadow duration-200 shadow-inner"
+                            placeholder="${data.customOrder.placeholder}"></textarea>
+                    </div>
+                    <button 
+                        type="submit" 
+                        class="relative z-10 w-full py-4 bg-sage-500 text-white font-bold rounded-2xl shadow-lg hover:bg-sage-600 hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg group">
+                        <i data-lucide="instagram" class="w-6 h-6 group-hover:rotate-12 transition-transform"></i>
+                        ${data.customOrder.buttonText}
+                    </button>
+                    <p id="status-msg" class="relative z-10 text-sm text-green-700 mt-4 hidden bg-green-50 p-3 rounded-xl border border-green-200 font-semibold text-center animate-pulse"></p>
+                </form>
+            `;
+
+            // Re-attach form listener since we replaced HTML
+            attachFormListener(data.contact.instagram);
+
+            // Footer
+            const footerWrap = document.getElementById('footer-content');
+            footerWrap.innerHTML = `
+                <div class="flex justify-center items-center gap-2 mb-8 animate-bounce-slow">
+                    <i data-lucide="flower" class="w-12 h-12 text-rose-300"></i>
+                </div>
+                <h3 class="text-4xl font-hand mb-10 text-rose-100">${data.siteMetadata.title}</h3>
+                
+                <div class="flex flex-col md:flex-row justify-center items-center gap-6 mb-12">
+                    <a href="${data.contact.instagramUrl}" target="_blank" class="group flex items-center gap-3 hover:text-rose-200 transition-colors bg-white/10 px-8 py-3 rounded-full border border-white/20 hover:bg-white/20 hover:border-rose-300">
+                        <i data-lucide="instagram" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-semibold text-lg">@${data.contact.instagram}</span>
+                    </a>
+                    <div class="flex items-center gap-3 bg-white/10 px-8 py-3 rounded-full border border-white/20">
+                        <i data-lucide="truck" class="w-6 h-6 text-rose-300"></i>
+                        <span class="font-semibold text-lg">${data.siteMetadata.deliveryText} <span class="text-2xl ml-2">${data.siteMetadata.deliveryFlag}</span></span>
+                    </div>
+                </div>
+
+                <div class="border-t border-sage-600/50 pt-10 text-sm text-sage-200 font-light">
+                    <p>${data.contact.footerText}</p>
+                </div>
+            `;
+
+            // Initialize Icons again for new content
+            lucide.createIcons();
+
+            // Initialize Scroll Observer for new elements
+            initScrollObserver();
+        }
+
+        function attachFormListener(instaHandle) {
+            const form = document.getElementById('orderForm');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const message = document.getElementById('order-details').value;
+                const statusMsg = document.getElementById('status-msg');
+
+                if (message.trim() !== "") {
+                    navigator.clipboard.writeText(message).then(() => {
+                        statusMsg.textContent = "Message copied to clipboard! Opening Instagram...";
+                        statusMsg.classList.remove('hidden');
+
+                        setTimeout(() => {
+                            window.open(`https://www.instagram.com/${instaHandle}/`, '_blank');
+                            statusMsg.classList.add('hidden');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Clipboard error:', err);
+                        // Fallback
+                        window.open(`https://www.instagram.com/${instaHandle}/`, '_blank');
+                    });
+                } else {
+                    alert("Please write your request before sending!");
+                }
+            });
+        }
+
+        // --- 2. Sidebar Logic ---
+        const menuBtn = document.getElementById('menu-btn');
+        const menuIcon = document.getElementById('menu-icon');
+        const sidebar = document.getElementById('sidebar-menu');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                sidebar.classList.remove('translate-x-full');
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                menuIcon.setAttribute('data-lucide', 'x');
+                // Prevent body scroll
+                document.body.classList.add('overflow-hidden');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
+                menuIcon.setAttribute('data-lucide', 'menu');
+                document.body.classList.remove('overflow-hidden');
+            }
+            lucide.createIcons();
+        }
+
+        // Expose to window for onclick handlers
+        window.toggleMenu = toggleMenu;
+
+        // --- 3. Scroll Animation Observer ---
+        function initScrollObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('opacity-0', 'translate-y-8');
+                        // Add a slight delay for staggered effect if not already handled
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            document.querySelectorAll('.scroll-animate').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // --- Init ---
+        // Load content on page load
+        loadContent();
+
+    </script>
+</body>
+
+</html>

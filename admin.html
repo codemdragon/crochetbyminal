@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Crochet by Minal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFFBF0',
+                        sage: { 100: '#E6F0E6', 300: '#B8D8B8', 500: '#8FBC8F', 700: '#5F855F', 800: '#2F4F2F' },
+                        rose: { 50: '#FFF5F7', 100: '#FFF0F5', 300: '#FFD1DC', 500: '#D8BFD8' },
+                    },
+                    fontFamily: {
+                        hand: ['Pacifico', 'cursive'],
+                        body: ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFFBF0;
+            color: #4A4A4A;
+        }
+    </style>
+</head>
+
+<body class="font-body antialiased min-h-screen flex flex-col">
+
+    <!-- Auth Section (Visible if not logged in) -->
+    <div id="auth-section" class="flex-grow flex items-center justify-center p-6">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-sage-200">
+            <div class="text-center mb-6">
+                <i data-lucide="lock" class="w-12 h-12 mx-auto text-sage-500 mb-2"></i>
+                <h1 class="text-3xl font-hand text-sage-700">Admin Login</h1>
+                <p class="text-gray-500 text-sm mt-2">Enter your GitHub credentials to manage the site.</p>
+            </div>
+
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-bold mb-1">GitHub Personal Access Token</label>
+                    <input type="password" id="github-pat"
+                        class="w-full p-3 border border-sage-300 rounded-lg focus:ring-2 focus:ring-sage-500 outline-none"
+                        placeholder="ghp_..." required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-bold mb-1">Repository Owner</label>
+                    <input type="text" id="repo-owner"
+                        class="w-full p-3 border border-sage-300 rounded-lg focus:ring-2 focus:ring-sage-500 outline-none"
+                        placeholder="e.g. codemdragon" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-bold mb-1">Repository Name</label>
+                    <input type="text" id="repo-name"
+                        class="w-full p-3 border border-sage-300 rounded-lg focus:ring-2 focus:ring-sage-500 outline-none"
+                        placeholder="e.g. crochetbyminal" required>
+                </div>
+                <button type="submit"
+                    class="w-full py-3 bg-sage-500 text-white font-bold rounded-lg shadow-md hover:bg-sage-600 transition-colors">
+                    Access Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Section (Hidden by default) -->
+    <div id="dashboard-section" class="hidden flex-grow flex flex-col">
+        <!-- Dashboard Nav -->
+        <nav class="bg-sage-700 text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <span class="text-2xl font-hand">Admin Dashboard</span>
+                <button onclick="logout()" class="flex items-center gap-2 hover:text-rose-300 transition-colors">
+                    <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <div class="container mx-auto p-6 flex-grow">
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-12 hidden">
+                <i data-lucide="loader-2" class="w-10 h-10 animate-spin text-sage-500 mx-auto"></i>
+                <p class="mt-4 text-sage-700 font-semibold">Loading data from GitHub...</p>
+            </div>
+
+            <!-- Content Tabs -->
+            <div id="content-area" class="hidden space-y-8">
+
+                <!-- Feedback Toast -->
+                <div id="toast"
+                    class="fixed bottom-6 right-6 bg-sage-800 text-white px-6 py-3 rounded-lg shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3">
+                    <i data-lucide="check-circle" class="text-green-400"></i>
+                    <span id="toast-msg">Changes Saved!</span>
+                </div>
+
+                <!-- 1. General & Hero -->
+                <section class="bg-white p-6 rounded-xl shadow-lg border border-sage-100">
+                    <h2 class="text-2xl font-bold text-sage-800 mb-4 flex items-center gap-2">
+                        <i data-lucide="home" class="w-6 h-6"></i> General Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Site Title</label>
+                            <input type="text" id="site-title" class="w-full p-2 border rounded focus:ring-sage-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Nav Title</label>
+                            <input type="text" id="nav-title-input"
+                                class="w-full p-2 border rounded focus:ring-sage-500">
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-sage-700 mt-6 mb-3">Hero Section</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Badge Text</label>
+                            <input type="text" id="hero-badge" class="w-full p-2 border rounded focus:ring-sage-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Main Title</label>
+                            <input type="text" id="hero-title" class="w-full p-2 border rounded focus:ring-sage-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Subtitle</label>
+                            <textarea id="hero-subtitle" rows="2"
+                                class="w-full p-2 border rounded focus:ring-sage-500"></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <button onclick="saveSection('hero')"
+                            class="bg-sage-600 text-white px-6 py-2 rounded-lg hover:bg-sage-700 transition">Save
+                            Changes</button>
+                    </div>
+                </section>
+
+                <!-- 2. Gallery Manager -->
+                <section class="bg-white p-6 rounded-xl shadow-lg border border-sage-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-sage-800 flex items-center gap-2">
+                            <i data-lucide="image" class="w-6 h-6"></i> Gallery Manager
+                        </h2>
+                        <button onclick="addGalleryItem()"
+                            class="bg-rose-400 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition flex items-center gap-2">
+                            <i data-lucide="plus"></i> Add Item
+                        </button>
+                    </div>
+
+                    <div id="gallery-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Gallery items will be injected here -->
+                    </div>
+                </section>
+
+                <!-- 3. About Section -->
+                <section class="bg-white p-6 rounded-xl shadow-lg border border-sage-100">
+                    <h2 class="text-2xl font-bold text-sage-800 mb-4 flex items-center gap-2">
+                        <i data-lucide="user" class="w-6 h-6"></i> About Section
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">About Image URL</label>
+                            <input type="text" id="about-image" class="w-full p-2 border rounded focus:ring-sage-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Title</label>
+                            <input type="text" id="about-title" class="w-full p-2 border rounded focus:ring-sage-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Content (Paragraphs)</label>
+                            <div id="about-paragraphs" class="space-y-2"></div>
+                            <button onclick="addParagraph()" class="text-sm text-sage-600 hover:underline mt-1">+ Add
+                                Paragraph</button>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <button onclick="saveSection('about')"
+                            class="bg-sage-600 text-white px-6 py-2 rounded-lg hover:bg-sage-700 transition">Save
+                            Changes</button>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- Config ---
+        let config = {
+            pat: localStorage.getItem('gh_pat') || '',
+            owner: localStorage.getItem('gh_owner') || '',
+            repo: localStorage.getItem('gh_repo') || '',
+            path: 'db.json'
+        };
+
+        let dbData = null;
+        let dbSha = null;
+
+        // --- Auth Logic ---
+        if (config.pat && config.owner && config.repo) {
+            showDashboard();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            config.pat = document.getElementById('github-pat').value;
+            config.owner = document.getElementById('repo-owner').value;
+            config.repo = document.getElementById('repo-name').value;
+
+            localStorage.setItem('gh_pat', config.pat);
+            localStorage.setItem('gh_owner', config.owner);
+            localStorage.setItem('gh_repo', config.repo);
+
+            showDashboard();
+        });
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+            fetchData();
+        }
+
+        // --- GitHub API Logic ---
+        async function fetchData() {
+            const loading = document.getElementById('loading');
+            const content = document.getElementById('content-area');
+
+            loading.classList.remove('hidden');
+            content.classList.add('hidden');
+
+            try {
+                const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`;
+                const res = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${config.pat}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch data. Check credentials.');
+
+                const data = await res.json();
+                dbSha = data.sha;
+                // Decode Base64 content (handle unicode correctly)
+                const decodedContent = decodeURIComponent(escape(atob(data.content)));
+                dbData = JSON.parse(decodedContent);
+
+                renderDashboard();
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+
+            } catch (err) {
+                alert(err.message);
+                loading.classList.add('hidden');
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+            }
+        }
+
+        async function saveData(msg = "Update content via Admin Panel") {
+            const toast = document.getElementById('toast');
+            try {
+                const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(dbData, null, 2))));
+                const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`;
+
+                const res = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${config.pat}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: msg,
+                        content: contentEncoded,
+                        sha: dbSha
+                    })
+                });
+
+                if (!res.ok) throw new Error('Failed to save. ' + res.statusText);
+
+                const data = await res.json();
+                dbSha = data.content.sha; // Update SHA for next commit
+
+                // Show success toast
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+
+            } catch (err) {
+                alert('Error saving data: ' + err.message);
+            }
+        }
+
+        // --- Rendering Logic ---
+        function renderDashboard() {
+            // Hero
+            document.getElementById('site-title').value = dbData.siteMetadata.title;
+            document.getElementById('nav-title-input').value = dbData.siteMetadata.title; // Assuming same for now
+            document.getElementById('hero-badge').value = dbData.hero.badge;
+            document.getElementById('hero-title').value = dbData.hero.title;
+            document.getElementById('hero-subtitle').value = dbData.hero.subtitle;
+
+            // About
+            document.getElementById('about-image').value = dbData.about.image;
+            document.getElementById('about-title').value = dbData.about.title;
+            renderAboutParagraphs();
+
+            // Gallery
+            renderGallery();
+        }
+
+        function renderAboutParagraphs() {
+            const container = document.getElementById('about-paragraphs');
+            container.innerHTML = '';
+            dbData.about.content.forEach((text, idx) => {
+                const div = document.createElement('div');
+                div.className = 'flex gap-2';
+                div.innerHTML = `
+                    <textarea class="w-full p-2 border rounded" rows="2" onchange="updateParagraph(${idx}, this.value)">${text}</textarea>
+                    <button onclick="removeParagraph(${idx})" class="text-red-500 hover:text-red-700"><i data-lucide="trash-2"></i></button>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        function renderGallery() {
+            const list = document.getElementById('gallery-list');
+            list.innerHTML = '';
+            dbData.gallery.forEach((item, idx) => {
+                const el = document.createElement('div');
+                el.className = 'bg-cream p-4 rounded-lg border border-sage-200 shadow-sm relative group';
+                el.innerHTML = `
+                    <img src="${item.image}" class="w-full h-40 object-cover rounded-md mb-3 bg-gray-200">
+                    <div class="space-y-2">
+                        <input type="text" value="${item.badge}" class="w-full p-1 border rounded text-sm font-bold text-sage-700" onchange="updateGalleryItem(${idx}, 'badge', this.value)" placeholder="Badge Title">
+                        <input type="text" value="${item.image}" class="w-full p-1 border rounded text-xs text-gray-500" onchange="updateGalleryItem(${idx}, 'image', this.value)" placeholder="Image URL">
+                    </div>
+                    <button onclick="deleteGalleryItem(${idx})" class="absolute top-2 right-2 bg-white/80 p-1 rounded-full text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                    <!-- <button onclick="saveData('Update gallery item')" class="mt-2 text-xs text-blue-500 w-full text-center">Save</button> -->
+                `;
+                list.appendChild(el);
+            });
+            lucide.createIcons();
+        }
+
+        // --- Update Handlers ---
+
+        // Generic Save Wrapper for Sections
+        function saveSection(section) {
+            if (section === 'hero') {
+                dbData.siteMetadata.title = document.getElementById('site-title').value;
+                dbData.hero.badge = document.getElementById('hero-badge').value;
+                dbData.hero.title = document.getElementById('hero-title').value;
+                dbData.hero.subtitle = document.getElementById('hero-subtitle').value;
+                saveData("Update Hero Section");
+            } else if (section === 'about') {
+                dbData.about.image = document.getElementById('about-image').value;
+                dbData.about.title = document.getElementById('about-title').value;
+                // Paragraphs are updated live in the array via onchange, just save here
+                saveData("Update About Section");
+            }
+        }
+
+        // Paragraphs
+        function updateParagraph(idx, val) {
+            dbData.about.content[idx] = val;
+        }
+        function addParagraph() {
+            dbData.about.content.push("New paragraph...");
+            renderAboutParagraphs();
+        }
+        function removeParagraph(idx) {
+            dbData.about.content.splice(idx, 1);
+            renderAboutParagraphs();
+        }
+
+        // Gallery
+        function updateGalleryItem(idx, field, val) {
+            dbData.gallery[idx][field] = val;
+        }
+        function addGalleryItem() {
+            const newItem = {
+                id: Date.now(),
+                image: "https://via.placeholder.com/600",
+                badge: "New Item",
+                category: "misc"
+            };
+            dbData.gallery.unshift(newItem); // Add to top
+            renderGallery();
+            saveData("Add new gallery item");
+        }
+        function deleteGalleryItem(idx) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                dbData.gallery.splice(idx, 1);
+                renderGallery();
+                saveData("Delete gallery item");
+            }
+        }
+
+    </script>
+</body>
+
+</html>
