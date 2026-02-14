@@ -141,9 +141,13 @@
                         <div class="flex gap-2">
                             <input type="file" id="gallery-upload" class="hidden" accept="image/*"
                                 onchange="handleImageUpload(this, 'gallery')">
+                            <!-- Hidden input for updating existing items -->
+                            <input type="file" id="gallery-update-upload" class="hidden" accept="image/*"
+                                onchange="handleImageUpload(this, 'gallery-update')">
+
                             <button onclick="document.getElementById('gallery-upload').click()"
                                 class="bg-sage-500 text-white px-4 py-2 rounded-lg hover:bg-sage-600 transition flex items-center gap-2">
-                                <i data-lucide="upload"></i> Upload Image
+                                <i data-lucide="upload"></i> Upload New
                             </button>
                             <button onclick="addGalleryItem()"
                                 class="bg-rose-400 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition flex items-center gap-2">
@@ -224,6 +228,7 @@
 
         let dbData = null;
         let dbSha = null;
+        let targetUpdateIndex = -1; // For updating specific gallery items
 
         // --- Auth Logic ---
         if (config.pat) {
@@ -354,11 +359,6 @@
 
                         if (!res.ok) throw new Error('Image upload failed');
 
-                        // We return the relative path. 
-                        // Note: For this to work in local dev (file://), you'd need the full raw URL.
-                        // But for prod (Vercel), relative path is best if caching validation is needed, 
-                        // OR use raw.githubusercontent.com for simplicity across both.
-                        // Let's use raw.githubusercontent.com to be safe across environments.
                         const rawUrl = `https://raw.githubusercontent.com/${config.owner}/${config.repo}/main/${filename}`;
                         resolve(rawUrl);
                     } catch (err) {
@@ -381,10 +381,9 @@
 
                 if (type === 'about') {
                     document.getElementById('about-image').value = imagePath;
-                    // Auto-save not triggered here, user must click Save Changes
                     alert('Image uploaded! Click "Save Changes" to apply.');
                 } else if (type === 'gallery') {
-                    // Create a new gallery item with this image
+                    // Create a new gallery item
                     const newItem = {
                         id: Date.now(),
                         image: imagePath,
@@ -394,22 +393,30 @@
                     dbData.gallery.unshift(newItem);
                     renderGallery();
                     saveData("Add new gallery item with uploaded image");
-                    alert('Image uploaded and added to gallery!');
+                    alert('Image added to gallery!');
+                } else if (type === 'gallery-update') {
+                    // Update existing item
+                    if (targetUpdateIndex > -1) {
+                        dbData.gallery[targetUpdateIndex].image = imagePath;
+                        renderGallery();
+                        saveData("Update gallery item image");
+                        alert('Image updated!');
+                    }
                 }
             } catch (err) {
                 alert('Upload failed: ' + err.message);
             } finally {
                 overlay.classList.add('hidden');
                 input.value = ''; // Reset
+                targetUpdateIndex = -1;
             }
         }
-
 
         // --- Rendering Logic ---
         function renderDashboard() {
             // Hero
             document.getElementById('site-title').value = dbData.siteMetadata.title;
-            document.getElementById('nav-title-input').value = dbData.siteMetadata.title; // Assuming same for now
+            document.getElementById('nav-title-input').value = dbData.siteMetadata.title;
             document.getElementById('hero-badge').value = dbData.hero.badge;
             document.getElementById('hero-title').value = dbData.hero.title;
             document.getElementById('hero-subtitle').value = dbData.hero.subtitle;
@@ -448,7 +455,12 @@
                     <img src="${item.image}" class="w-full h-40 object-cover rounded-md mb-3 bg-gray-200">
                     <div class="space-y-2">
                         <input type="text" value="${item.badge}" class="w-full p-1 border rounded text-sm font-bold text-sage-700" onchange="updateGalleryItem(${idx}, 'badge', this.value)" placeholder="Badge Title">
-                        <input type="text" value="${item.image}" class="w-full p-1 border rounded text-xs text-gray-500" onchange="updateGalleryItem(${idx}, 'image', this.value)" placeholder="Image URL">
+                        <div class="flex gap-2">
+                             <input type="text" value="${item.image}" class="w-full p-1 border rounded text-xs text-gray-500" onchange="updateGalleryItem(${idx}, 'image', this.value)" placeholder="Image URL">
+                             <button onclick="triggerGalleryUpdate(${idx})" class="bg-sage-200 hover:bg-sage-300 text-sage-800 p-1 rounded transition" title="Upload Replacement">
+                                <i data-lucide="upload" class="w-4 h-4"></i>
+                             </button>
+                        </div>
                     </div>
                     <button onclick="deleteGalleryItem(${idx})" class="absolute top-2 right-2 bg-white/80 p-1 rounded-full text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50">
                         <i data-lucide="trash-2" class="w-5 h-5"></i>
@@ -460,6 +472,11 @@
         }
 
         // --- Update Handlers ---
+
+        function triggerGalleryUpdate(idx) {
+            targetUpdateIndex = idx;
+            document.getElementById('gallery-update-upload').click();
+        }
 
         // Generic Save Wrapper for Sections
         function saveSection(section) {
